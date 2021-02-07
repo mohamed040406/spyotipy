@@ -7,10 +7,10 @@ from spotify.models import Album, Track
 
 class Client:
     """Client Object Used to Comnunicate with Spotify API
-    Prameters
+    Parameters
     ---------
     client_id: :class:`str`
-        The is of the client
+        The id of the client
     client_secret: :class:`str`
         The secret for the client
 
