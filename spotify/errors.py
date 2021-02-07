@@ -1,5 +1,5 @@
 class SpotifyError(Exception):
-    """Base exception class for SpotifyPy"""
+    """Base exception class for spyotipy"""
     pass
 
 
