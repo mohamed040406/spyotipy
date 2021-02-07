@@ -14,7 +14,7 @@ Installing
     python3 -m pip install -U SpotifyPy
 
     # Windows
-    py -3 -m pip install -U SpotifyPy.py
+    py -3 -m pip install -U SpotifyPy
 
 
 Quick Example
