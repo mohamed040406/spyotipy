@@ -24,12 +24,12 @@ extras_require = {
 }
 
 setup(
-    name="SpotifyPy",
+    name="spyotipy",
     author="mohamed040406",
-    url="https://github.com/mohamed040406/SpotifyPy",
+    url="https://github.com/mohamed040406/spyotipy",
     project_urls={
-        "Documentation": "https://SpotifyPy.readthedocs.io/en/latest/",
-        "Issue tracker": "https://github.com/mohamed040406/SpotifyPy/issues",
+        "Documentation": "https://spyotipy.readthedocs.io/en/latest/",
+        "Issue tracker": "https://github.com/mohamed040406/spyotipy/issues",
     },
     version=version,
     packages=[
@@ -49,7 +49,6 @@ setup(
     python_requires=">=3.7",
     classifiers=[
         "Programming Language :: Python",
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",

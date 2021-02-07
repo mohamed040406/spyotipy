@@ -1,4 +1,4 @@
-__title__ = "SpotifyPy"
+__title__ = "spyotipy"
 __author__ = "mohamed040406"
 __license__ = "MIT"
 __copyright__ = "Copyright 2020-present mohamed040406"

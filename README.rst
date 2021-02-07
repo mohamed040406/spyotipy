@@ -1,4 +1,4 @@
-SpotifyPy
+Spyotipy
 ==========
 
 An easy to use API wrapper for Spotify written in Python.
@@ -6,15 +6,15 @@ An easy to use API wrapper for Spotify written in Python.
 Installing
 ----------
 
-**Python 3.6 or higher is required**
+**Python 3.7 or higher is required**
 
 .. code:: sh
 
     # Linux/macOS
-    python3 -m pip install -U SpotifyPy
+    python3 -m pip install -U spyotipy
 
     # Windows
-    py -3 -m pip install -U SpotifyPy
+    py -3 -m pip install -U spyotipy
 
 
 Quick Example
