@@ -10,7 +10,7 @@ class Client:
     Parameters
     ---------
     client_id: :class:`str`
-        The is of the client
+        The id of the client
     client_secret: :class:`str`
         The secret for the client
 
