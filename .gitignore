@@ -1,0 +1,15 @@
+*.json
+*.py[cod]
+*.log
+*.egg-info
+venv
+.venv
+build
+dist
+.idea
+.vscode
+__pycache__
+docs/_build
+docs/crowdin.py
+*.buildinfo
+backup
