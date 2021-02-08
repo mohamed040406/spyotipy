@@ -13,7 +13,7 @@ class BaseTrack(Object):
         self.artists: List[SimplifiedArtist] = [
             SimplifiedArtist(self.client, i) for i in data.pop("artists", [])
         ]
-        self.available_markets: List[str] = data.pop("available_markets", [])
+        self.available_markets: Optional[List[str]] = data.pop("available_markets", None)
         self.disc_number: Optional[int] = int(data.pop("disc_number"))
         self.duration_ms: int = int(data.pop("duration_ms"))
         self.explicit: bool = bool(data.pop("explicit"))
@@ -34,9 +34,9 @@ class BaseTrack(Object):
             else None
         )
 
-        self.is_playable: bool = data.pop("is_playable", False)
+        self.is_playable: Optional[bool] = data.pop("is_playable", None)
 
         if data.get("restrictions"):
-            self.restrictions: Restriction = Restriction(data["restrictions"])
+            self.restrictions: Restriction = Restriction(data.pop("restrictions"))
         else:
             self.restrictions = None

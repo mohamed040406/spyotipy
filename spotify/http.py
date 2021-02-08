@@ -3,10 +3,10 @@ import logging
 import sys
 from base64 import b64encode
 from collections import defaultdict
-from typing import Optional, Dict
-from urllib.parse import quote as _uriquote
+from typing import Optional, Dict, List, Any
+from urllib.parse import quote
 
-import aiohttp as aiohttp
+import aiohttp
 
 from . import __version__
 from .errors import Forbidden, NotFound, ServerError, HTTPException, BearerError
@@ -17,35 +17,23 @@ log = logging.getLogger(__name__)
 class Route:
     BASE = 'https://api.spotify.com/v1'
 
-    def __init__(self, method, path, **parameters):
+    def __init__(self, method, path, *, prefix=True, **parameters):
         self.path = path
         self.method = method
 
-        url = (self.BASE + self.path)
+        if prefix:
+            url = self.BASE + self.path
+        else:
+            url = self.path
+
         if parameters:
-            self.url = url.format(**{k: _uriquote(v) if isinstance(v, str) else v for k, v in parameters.items()})
+            self.url = url.format(**{k: quote(v) if isinstance(v, str) else v for k, v in parameters.items()})
         else:
             self.url = url
 
     @property
     def bucket(self):
         return "{0.method} {0.path}".format(self)
-
-
-class Locker:
-    def __init__(self, lock):
-        self.lock = lock
-        self._unlock = True
-
-    def __enter__(self):
-        return self
-
-    def unlock(self):
-        self._unlock = False
-
-    def __exit__(self, type, value, traceback):
-        if self._unlock:
-            self.lock.release()
 
 
 class HTTP:
@@ -58,7 +46,7 @@ class HTTP:
 
     def __init__(self, client_id: str, client_secret: str, *, loop=None):
         self.loop = loop if loop else asyncio.get_event_loop()
-        self.__session = aiohttp.ClientSession(loop=self.loop)
+        self.__session = aiohttp.ClientSession(loop=loop)
 
         self.bearer_info: Optional[Dict[str, str]] = None
 
@@ -172,31 +160,41 @@ class HTTP:
     # Endpoint related methods (defined in order)
 
     # Albums endpoints
-    async def get_albums(self, ids, *, market: Optional[str] = "US"):
-        route = Route("GET", "/albums", ids=ids, market=market)
+    async def get_albums(self, ids: List[str], *, market: Optional[str] = "US") -> List[Any]:
+        if market:
+            route = Route("GET", "/albums?ids={ids}&market={market}", ids=",".join(ids), market=market)
+        else:
+            route = Route("GET", "/albums?ids={ids}", ids=",".join(ids))
+        return (await self.request(route))["albums"]
 
-        return await self.request(route)
-
-    async def get_album(self, _id: str, *, market: Optional[str] = "US"):
-        route = Route("GET", "/albums/%s" % _id, market=market)
+    async def get_album(self, _id: str, *, market: Optional[str] = None):
+        if market:
+            route = Route("GET", "/albums/{id}?market={market}", id=_id, market=market)
+        else:
+            route = Route("GET", "/albums/{id}", id=_id)
         return await self.request(route)
 
     async def get_album_tracks(
             self,
             _id: str,
             *,
-            market: Optional[str] = "US",
-            limit: Optional[int] = 20,
+            market: Optional[str] = None,
+            limit: Optional[int] = 50,
             offset: Optional[int] = 0,
     ):
         if limit < 1 or limit > 50:
-            raise ValueError("Limit should be an int between 1 and 5")
-        route = Route("GET", "/albums/%s/tracks" % _id, market=market, limit=limit, offset=offset)
+            raise ValueError("Limit should be an int between 1 and 50")
+        if market:
+            route = Route("GET", "/albums/{id}/tracks?market={market}",
+                          id=_id, market=market, limit=limit, offset=offset
+                          )
+        else:
+            route = Route("GET", "/albums/{id}/tracks?market={market}", id=_id, limit=limit, offset=offset)
 
         return await self.request(route)
 
     # Tracks endpoints
     async def get_track(self, _id: str, *, market: Optional[str] = "US"):
-        route = Route("GET", "/tracks/%s" % _id, market=market)
+        route = Route("GET", "/tracks/{id}?market={market}", id=_id, market=market)
 
         return await self.request(route)

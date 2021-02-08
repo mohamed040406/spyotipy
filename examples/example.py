@@ -8,7 +8,7 @@ async def main():
         a = await c.get_album("id")
         print(a)
 
-        for track in a:
+        async for track in a:
             print(track)
 
 

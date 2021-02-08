@@ -21,9 +21,7 @@ class BaseAlbum(Object):
         self.artists: List[SimplifiedArtist] = [
             SimplifiedArtist(self.client, i) for i in data.pop("artists")
         ]
-        self.available_markets: Optional[List[str]] = (
-            data.pop("available_markets") or None
-        )
+        self.available_markets: Optional[List[str]] = data.pop("available_markets", [])
 
         self.external_urls: ExternalURL = ExternalURL(data.pop("external_urls"))
 
@@ -31,6 +29,7 @@ class BaseAlbum(Object):
         self.images: List[Image] = [Image(self.client, i) for i in data.pop("images")]
 
         self.name: str = data.pop("name")
+        self.total_tracks: int = int(data.pop("total_tracks"))
 
         self.release_date: str = data.pop("release_date")
         self.release_date_precision: str = data.pop("release_date_precision")

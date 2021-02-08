@@ -1,5 +1,5 @@
 class Base:
-    __slots__ = ("client",)
+    __slots__ = ("client", "href",)
 
     has_href = True
 

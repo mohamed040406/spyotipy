@@ -1,17 +1,17 @@
 import asyncio
-from typing import Optional
+from typing import Optional, List
 
 from spotify.http import HTTP
 from spotify.models import Album, Track
 
 
 class Client:
-    """Client Object Used to Comnunicate with Spotify API
+    """Client object used to communicate with Spotify API
     Parameters
     ---------
-    client_id: :class:`str`
+    client_id: str
         The id of the client
-    client_secret: :class:`str`
+    client_secret: str
         The secret for the client
 
     You can get both `client_id` and `client_secret` from spotify
@@ -40,25 +40,25 @@ class Client:
 
     @property
     def client_id(self) -> str:
-        """:class:`str` - The Spotify client ID."""
+        """str - The Spotify client ID."""
         return self.http.client_id
 
     @property
     def client_secret(self) -> str:
-        """:class:`str` - The Spotify client Secret."""
+        """str - The Spotify client Secret."""
         return self.http.client_secret
 
     async def close(self):
         """Close the HTTP session."""
         await self.http.close()
 
-    async def get_album(self, _id: str, *, market: str = "US") -> Album:
+    async def get_album(self, _id: str, *, market: Optional[str] = None) -> Album:
         """Retrieve an album with a spotify ID.
         Parameters
         ----------
-        _id : :class:`str`
+        _id : str
             The ID to search for.
-        market : Optional[:class:`str`]
+        market : Optional[str]
             An ISO 3166-1 alpha-2 country code
         Returns
         -------
@@ -68,13 +68,26 @@ class Client:
         data = await self.http.get_album(_id, market=market)
         return Album(self, data)
 
-    async def get_track(self, _id: str, *, market: str = "US"):
-        """Retrieve a trach with its spotify ID.
+    async def get_albums(self, *ids: str, market: Optional[str] = None) -> List[Album]:
+        """
+        Retrieve a group or albums for the API
         Parameters
         ----------
-        _id : :class:`str`
+        ids: str
+            a list for the albums to retrieve
+        market: str
+            An ISO 3166-1 alpha-2 country code
+        """
+        data = await self.http.get_albums([*ids], market=market)
+        return [Album(self, a) if a is not None else None for a in data]
+
+    async def get_track(self, _id: str, *, market: Optional[str] = None):
+        """Retrieve a track with its spotify ID.
+        Parameters
+        ----------
+        _id : str
             The ID to search for.
-        market : Optional[:class:`str`]
+        market : Optional[str]
             An ISO 3166-1 alpha-2 country code
         Returns
         -------
