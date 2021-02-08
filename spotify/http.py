@@ -46,7 +46,7 @@ class HTTP:
 
     def __init__(self, client_id: str, client_secret: str, *, loop=None):
         self.loop = loop if loop else asyncio.get_event_loop()
-        self.__session = aiohttp.ClientSession(loop=loop)
+        self.__session = aiohttp.ClientSession(loop=self.loop)
 
         self.bearer_info: Optional[Dict[str, str]] = None
 
